@@ -4366,7 +4366,7 @@ paths:
     get:
       tags:
         - Subscriptions
-      summary: Get all Subscriptions
+      summary: Get all SubscriptionsgetWSDL
       description: |
         This operation can be used to retrieve a list of subscriptions of the user associated with the provided access token. This operation is capable of
 

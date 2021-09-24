@@ -344,6 +344,7 @@ class Details extends Component {
      * @memberof Details
      */
     getLeftMenuItemForDefinitionByType(apiType) {
+        console.log(apiType);
         const { isAPIProduct } = this.state;
         const { intl, match } = this.props;
         const uuid = match.params.apiUUID || match.params.api_uuid || match.params.apiProdUUID;

@@ -196,11 +196,12 @@ function Overview(props) {
     /**
      * Download Service Definition
      * @param {string} serviceKey The service id.
+     * @param {string} serviceDefinitionType The service definitionType.
      * @returns {Object} Service Definition File.
      */
-    function downloadServiceDefinition(serviceKey) {
+    function downloadServiceDefinition(serviceKey, serviceDefinitionType) {
         return ServiceCatalog.getServiceDefinition(serviceKey).then((file) => {
-            return Utils.downloadServiceDefinition(file);
+            return Utils.downloadServiceDefinition(Utils.prettifyXml(file), serviceDefinitionType);
         }).catch((error) => {
             if (error.response) {
                 Alert.error(error.response.body.description);
@@ -217,7 +218,10 @@ function Overview(props) {
         if (!serviceDefinition) {
             const promisedServiceDefinition = ServiceCatalog.getServiceDefinition(serviceId);
             promisedServiceDefinition.then((data) => {
-                if (service.definitionType !== 'GRAPHQL_SDL') {
+                if (service.definitionType === 'WSDL1' || service.definitionType === 'WSDL2') {
+                    setServiceDefinition(Utils.prettifyXml(data));
+                    setFormat('xml');
+                } else if (service.definitionType !== 'GRAPHQL_SDL') {
                     setServiceDefinition(YAML.safeDump(YAML.safeLoad(JSON.stringify(data))));
                     setFormat('yaml');
                 } else {
@@ -377,6 +381,7 @@ function Overview(props) {
         smoothScrolling: true,
         wordWrap: 'on',
         scrollBeyondLastLine: false,
+        formatOnPaste: true,
     };
 
     return (
@@ -445,6 +450,7 @@ function Overview(props) {
                                             serviceVersion={service.version}
                                             serviceUrl={service.serviceUrl}
                                             usage={service.usage}
+                                            servieDefinitionType={service.definitionType}
                                             isOverview
                                         />
                                     )}
@@ -521,6 +527,7 @@ function Overview(props) {
                                                             onClick={
                                                                 () => downloadServiceDefinition(
                                                                     service.id,
+                                                                    service.definitionType,
                                                                 )
                                                             }
                                                             color='primary'
@@ -573,24 +580,35 @@ function Overview(props) {
                                                             <Progress />
                                                         )}
                                                     >
-                                                        <Grid container spacing={2} className={classes.editorRoot}>
-                                                            <Grid item className={classes.editorPane}>
-                                                                <MonacoEditor
-                                                                    language={format}
-                                                                    width='100%'
-                                                                    height='calc(100vh - 51px)'
-                                                                    theme='vs-dark'
-                                                                    value={serviceDefinition}
-                                                                    options={editorOptions}
-                                                                />
+                                                        {service.definitionType !== 'WSDL1' ? (
+                                                            <Grid container spacing={2} className={classes.editorRoot}>
+                                                                <Grid item className={classes.editorPane}>
+                                                                    <MonacoEditor
+                                                                        language={format}
+                                                                        width='100%'
+                                                                        height='calc(100vh - 51px)'
+                                                                        theme='vs-dark'
+                                                                        value={serviceDefinition}
+                                                                        options={editorOptions}
+                                                                    />
+                                                                </Grid>
+                                                                <Grid item className={classes.editorPane}>
+                                                                    <SwaggerUI
+                                                                        url={'data:text/' + format + ','
+                                                                        + encodeURIComponent(serviceDefinition)}
+                                                                    />
+                                                                </Grid>
                                                             </Grid>
-                                                            <Grid item className={classes.editorPane}>
-                                                                <SwaggerUI
-                                                                    url={'data:text/' + format + ','
-                                                                    + encodeURIComponent(serviceDefinition)}
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
+                                                        ) : (
+                                                            <MonacoEditor
+                                                                language={format}
+                                                                width='100%'
+                                                                height='calc(100vh - 51px)'
+                                                                theme='vs-dark'
+                                                                value={serviceDefinition}
+                                                                options={editorOptions}
+                                                            />
+                                                        )}
                                                     </Suspense>
                                                 </Dialog>
                                             </TableCell>

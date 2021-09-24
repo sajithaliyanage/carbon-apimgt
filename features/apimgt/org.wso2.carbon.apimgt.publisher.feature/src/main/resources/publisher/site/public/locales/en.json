@@ -7767,6 +7767,16 @@
       "value": "serviceName"
     }
   ],
+  "ServiceCatalog.CreateSoapPassthroughApi.create.api.dialog.helper": [
+    {
+      "type": 0,
+      "value": "Create SOAP Passthrough API from service "
+    },
+    {
+      "type": 1,
+      "value": "serviceName"
+    }
+  ],
   "ServiceCatalog.CreateApi.create.api.dialog.title": [
     {
       "type": 0,

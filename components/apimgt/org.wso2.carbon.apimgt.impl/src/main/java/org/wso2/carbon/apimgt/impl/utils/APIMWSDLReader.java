@@ -162,13 +162,24 @@ public class APIMWSDLReader {
     public static WSDLValidationResponse validateWSDLFile(InputStream inputStream) throws APIManagementException {
         try {
             byte[] wsdlContent = APIUtil.toByteArray(inputStream);
-            WSDLProcessor processor = getWSDLProcessor(wsdlContent);
-            return getWsdlValidationResponse(processor);
+            return validateWSDLFile(wsdlContent);
         } catch (APIManagementException e) {
             return handleExceptionDuringValidation(e);
         } catch (IOException e) {
             throw new APIMgtWSDLException("Error while validating WSDL", e);
         }
+    }
+
+    /**
+     * Extract the WSDL file and validates it
+     *
+     * @param wsdlContent file content as a byte array
+     * @return Validation information
+     * @throws APIManagementException Error occurred during validation
+     */
+    public static WSDLValidationResponse validateWSDLFile(byte[] wsdlContent) throws  APIManagementException {
+        WSDLProcessor processor = getWSDLProcessor(wsdlContent);
+        return getWsdlValidationResponse(processor);
     }
 
     /**

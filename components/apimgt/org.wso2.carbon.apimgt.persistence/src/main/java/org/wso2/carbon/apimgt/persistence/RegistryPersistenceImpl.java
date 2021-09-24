@@ -1677,7 +1677,7 @@ public class RegistryPersistenceImpl implements APIPersistence {
             String visibility = apiArtifact.getAttribute(APIConstants.API_OVERVIEW_VISIBILITY);
             String visibleRolesList = apiArtifact.getAttribute(APIConstants.API_OVERVIEW_VISIBLE_ROLES);
 
-            Resource wsdlResource = registry.newResource();;
+            Resource wsdlResource = registry.newResource();
             
             wsdlResource.setContentStream(wsdlResourceFile.getContent());
             if (wsdlResourceFile.getContentType() != null) {

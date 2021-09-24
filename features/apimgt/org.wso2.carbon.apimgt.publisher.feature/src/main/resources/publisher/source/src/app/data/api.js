@@ -2161,7 +2161,7 @@ class API extends Resource {
                 this._requestMetaData()
             );
         });
-        return promisedServiceResponse.then(response => response.body);
+        return promisedServiceResponse.then(response => {console.log(response.body); return response.body});
     }
 
     /**
